@@ -9,6 +9,9 @@ def initialize():
     global min15_last
     global min30_last
     global line_token
+    global has_order
+    global op_h
+    global op_l
     now_min = None
     tick_min = None
     volume = 0
@@ -18,4 +21,7 @@ def initialize():
     min5_last = None
     min15_last = None
     min30_last = None
-    line_token = None
+    line_token = []
+    has_order = False
+    op_h = 0
+    op_l = 0

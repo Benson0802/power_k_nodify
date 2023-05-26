@@ -162,6 +162,8 @@ class convertK():
             df2 = pd.concat([df_1k.between_time('15:01', '23:59'), df_1k.between_time('00:00', '05:00')]).resample(rule=minutes, closed='right', label='right').apply(hlc_dict).dropna()
             resampled_df = df2.combine_first(df1)
             logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+            logging.debug('df_1k')
+            logging.debug(df_1k)
             logging.debug('df1')
             logging.debug(df1)
             logging.debug('df2')
