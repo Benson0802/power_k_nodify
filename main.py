@@ -95,7 +95,7 @@ def trade(close):
     if not df_trade.empty:
         if df_trade.iloc[-1]['type'] == 1:
             globals.has_order = True
-    
+
     if globals.has_order == False:# 目前沒單
         if globals.op_l !=0 and globals.op_h != 0:
             if close == globals.op_h:
@@ -106,25 +106,25 @@ def trade(close):
                 buy_sell(1, 1, close, balance,total_balance)  # 買進多單
     else:# 目前有單 
         if len(df_trade) > 0:
-            if df_trade['type'] == 1:  # 有單時
-                if df_trade['lot'] == 1:  # 有多單的處理
+            if df_trade['type'].iloc[-1] == 1:  # 有單時
+                if df_trade['lot'].iloc[-1]  == 1:  # 有多單的處理
                     if globals.op_l !=0 and globals.op_h != 0:
-                        if close <= (df_trade['price'] - loss):
-                            balance = ((close - df_trade['price'])*50)-70  # 計算賺賠
+                        if close <= (df_trade['price'].iloc[-1]  - loss):
+                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
                             print('多單停損')
                             buy_sell(-1, -1, close, balance,total_balance)  # 多單停損
-                        elif close == globals.op_h:
-                            balance = ((close - df_trade['price'])*50)-70  # 計算賺賠
+                        elif close >= globals.op_h:
+                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
                             print('多單停利')
                             buy_sell(-1, -1,close, balance,total_balance)  # 多單停利
-                elif df_trade['lot'] == -1:  # 空單的處理
+                elif df_trade['lot'].iloc[-1]  == -1:  # 空單的處理
                     if globals.op_l !=0 and globals.op_h != 0:
-                        if (close >= (df_trade['price'] + loss)):
-                            balance = ((df_trade['price'] - close)*50)-70  # 計算賺賠
+                        if (close >= (df_trade['price'].iloc[-1] + loss)):
+                            balance = ((df_trade['price'].iloc[-1] - close)*50)-70  # 計算賺賠
                             print('空單回補')
                             buy_sell(-1, 1, close, balance,total_balance)  # 空單回補
-                        elif close == globals.op_l:
-                            balance = ((df_trade['price'] - close)*50)-70  # 計算賺賠
+                        elif close >= globals.op_l:
+                            balance = ((df_trade['price'].iloc[-1]  - close)*50)-70  # 計算賺賠
                             print('空單停利')
                             buy_sell(-1, 1, close, balance,total_balance)  # 空單停利
 
@@ -146,14 +146,13 @@ def buy_sell(type,lot,close,balance,total_balance):
     elif type == -1 and lot == -1:
         print('多單賣出')
         total_lot = 0
-    now = datetime.datetime().now().strftime("%Y-%m-%d %H:%M:%S")
-        
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     total_balance = total_balance + balance
     with open('data/trade.csv', 'a', encoding='utf-8', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([now, type, close, lot, total_lot, balance, total_balance,0])
-        msg = lineMsgFormat_trade(now, type, close, lot, total_lot, balance, total_balance)
-        sendMessage(msg)
+        lineMsgFormat_trade(now, type, close, lot, total_lot, balance, total_balance)
     
 def lineMsgFormat_trade(datetime,type,price,lot,total_lot,balance,total_balance):
     '''
@@ -174,7 +173,8 @@ def lineMsgFormat_trade(datetime,type,price,lot,total_lot,balance,total_balance)
         msg += str(balance)    
         msg += ' | 總盈餘:'
         msg += str(total_balance)
-        sendMessage(msg)
+        
+    sendMessage(msg)
 
 def lineMsgFormat(minute,datetime,color,close,volume,power,hh,h,l,ll,op_h,op_l,tick_close):
     date, time = datetime.split(" ")
