@@ -86,17 +86,17 @@ def get_power_data(minute,tick_close,df):
         globals.min5_op_h = op_h
         globals.min5_op_l = op_l
         tmp_datetime = pd.to_datetime(datetime)
-        globals.min1_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
+        globals.min5_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
     elif minute == 15:
         globals.min15_op_h = op_h
         globals.min15_op_l = op_l
         tmp_datetime = pd.to_datetime(datetime)
-        globals.min1_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
+        globals.min15_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
     elif minute == 30:
         globals.min30_op_h = op_h
         globals.min30_op_l = op_l
         tmp_datetime = pd.to_datetime(datetime)
-        globals.min1_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
+        globals.min30_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
     
     # trade(tick_close)
     lineMsgFormat(minute,datetime,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
@@ -360,11 +360,30 @@ def lineMsgFormat_trade(datetime,type,price,lot,total_lot,balance,total_balance)
     sendMessage(msg)
 
 def lineMsgFormat(minute,datetime,color,close,volume,power,hh,h,l,ll,op_h,op_l,tick_close):
+    maturity_time = None
+    maturity_date = None
+    if minute == 1:
+        maturity_time = str(globals.min1_maturity_time)
+        maturity_date , maturity_time = datetime.split(" ")
+        maturity_time = maturity_time[:-3]
+    elif minute == 5:
+        maturity_time = str(globals.min5_maturity_time)
+        maturity_date , maturity_time = datetime.split(" ")
+        maturity_time = maturity_time[:-3]
+    elif minute == 15:
+        maturity_time = str(globals.min15_maturity_time)
+        maturity_date , maturity_time = datetime.split(" ")
+        maturity_time = maturity_time[:-3]
+    elif minute == 30:
+        maturity_time = str(globals.min30_maturity_time)
+        maturity_date , maturity_time = datetime.split(" ")
+        maturity_time = maturity_time[:-3]
     date, time = datetime.split(" ")
     time = time[:-3]
     msg = "\n頻率："+str(minute)+'分鐘圖\n'
     msg += "日期："+str(date)+"\n"
     msg += "時間："+str(time)+"\n"
+    msg += "時效："+str(maturity_time)+"\n"
     msg += "台股指數近月\n"
     msg += color+"\n"
     msg += "收："+str(close)+"\n"
