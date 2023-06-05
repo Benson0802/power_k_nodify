@@ -11,6 +11,7 @@ import math
 import requests
 import logging
 import csv
+import time
 
 globals.initialize()
 obj = check_opening()
@@ -114,44 +115,53 @@ def trade(close):
         if df_trade.iloc[-1]['type'] == 1:
             globals.has_order = True
 
-    
     if globals.has_order == False:# 目前沒單
-        if globals.min1_maturity_time != None and globals.now_min <= globals.min1_maturity_time:
-            if close >= globals.min1_op_h:
-                print('買進空單')
-                buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                globals.min_buy = 1
-            elif globals.min1_op_l <= close:
-                print('買進多單')
-                buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                globals.min_buy = 1
-        elif globals.min5_maturity_time != None and globals.now_min <= globals.min5_maturity_time:
-            if close >= globals.min5_op_h:
-                print('買進空單')
-                buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                globals.min_buy = 5
-            elif globals.min5_op_l <= close:
-                print('買進多單')
-                buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                globals.min_buy = 5
-        elif globals.min15_maturity_time != None and globals.now_min <= globals.min15_maturity_time:
-            if close >= globals.min15_op_h:
-                print('買進空單')
-                buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                globals.min_buy = 15
-            elif globals.min15_op_l <= close:
-                print('買進多單')
-                buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                globals.min_buy = 15
-        elif globals.min30_maturity_time != None and globals.now_min <= globals.min30_maturity_time:
-            if close >= globals.min30_op_h:
-                print('買進空單')
-                buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                globals.min_buy = 30
-            elif globals.min30_op_l <= close:
-                print('買進多單')
-                buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                globals.min_buy = 30
+        now_min_str = globals.now_min + ":00"
+        now_min = pd.to_datetime(now_min_str, format="%Y/%m/%d %H:%M:%S")
+        if globals.min1_maturity_time != None:
+            min1_maturity_time = pd.to_datetime(globals.min1_maturity_time, format="%Y/%m/%d %H:%M:%S")
+            if now_min <= min1_maturity_time:
+                if close >= globals.min1_op_h:
+                    print('買進空單')
+                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
+                    globals.min_buy = 1
+                elif globals.min1_op_l <= close:
+                    print('買進多單')
+                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
+                    globals.min_buy = 1
+        elif globals.min5_maturity_time != None:
+            min5_maturity_time = pd.to_datetime(globals.min5_maturity_time, format="%Y/%m/%d %H:%M:%S")
+            if now_min <= min5_maturity_time:
+                if close >= globals.min5_op_h:
+                    print('買進空單')
+                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
+                    globals.min_buy = 5
+                elif globals.min5_op_l <= close:
+                    print('買進多單')
+                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
+                    globals.min_buy = 5
+        elif globals.min15_maturity_time != None:
+            min15_maturity_time = pd.to_datetime(globals.min15_maturity_time, format="%Y/%m/%d %H:%M:%S")
+            if now_min <= min15_maturity_time:
+                if close >= globals.min15_op_h:
+                    print('買進空單')
+                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
+                    globals.min_buy = 15
+                elif globals.min15_op_l <= close:
+                    print('買進多單')
+                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
+                    globals.min_buy = 15
+        elif globals.min30_maturity_time != None:
+            min30_maturity_time = pd.to_datetime(globals.min30_maturity_time, format="%Y/%m/%d %H:%M:%S")
+            if now_min <= min30_maturity_time:
+                if close >= globals.min30_op_h:
+                    print('買進空單')
+                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
+                    globals.min_buy = 30
+                elif globals.min30_op_l <= close:
+                    print('買進多單')
+                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
+                    globals.min_buy = 30
     else:# 目前有單 
         if len(df_trade) > 0:
             if df_trade['type'].iloc[-1] == 1:  # 有單時
@@ -364,19 +374,19 @@ def lineMsgFormat(minute,datetime,color,close,volume,power,hh,h,l,ll,op_h,op_l,t
     maturity_date = None
     if minute == 1:
         maturity_time = str(globals.min1_maturity_time)
-        maturity_date , maturity_time = datetime.split(" ")
+        maturity_date , maturity_time = maturity_time.split(" ")
         maturity_time = maturity_time[:-3]
     elif minute == 5:
         maturity_time = str(globals.min5_maturity_time)
-        maturity_date , maturity_time = datetime.split(" ")
+        maturity_date , maturity_time = maturity_time.split(" ")
         maturity_time = maturity_time[:-3]
     elif minute == 15:
         maturity_time = str(globals.min15_maturity_time)
-        maturity_date , maturity_time = datetime.split(" ")
+        maturity_date , maturity_time = maturity_time.split(" ")
         maturity_time = maturity_time[:-3]
     elif minute == 30:
         maturity_time = str(globals.min30_maturity_time)
-        maturity_date , maturity_time = datetime.split(" ")
+        maturity_date , maturity_time = maturity_time.split(" ")
         maturity_time = maturity_time[:-3]
     date, time = datetime.split(" ")
     time = time[:-3]
