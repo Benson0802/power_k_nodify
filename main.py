@@ -12,12 +12,13 @@ import requests
 import logging
 import csv
 import time
+import logging
 
 globals.initialize()
 obj = check_opening()
 year_mon = obj.get_year_mon()
 globals.code = 'TXF' + str(year_mon['year']) + ('0' if len(str(year_mon['mon'])) == 1 else '') + str(year_mon['mon'])
-
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.INFO)
 
 def power_kbar(tick_close):
     '''
@@ -25,45 +26,73 @@ def power_kbar(tick_close):
     '''
     df_1 = pd.read_csv('data/1Min.csv')
     df_1Min = df_1.iloc[-2]
+
     df_5 = pd.read_csv('data/5Min.csv')
     df_5Min = df_5.iloc[-2]
+
     df_15 = pd.read_csv('data/15Min.csv')
     df_15Min = df_15.iloc[-2]
+
     df_30 = pd.read_csv('data/30Min.csv')
     df_30Min = df_30.iloc[-2]
+
+    df_trade = pd.read_csv('data/trade.csv').tail(1)
     
-    if globals.min1_notify_time == df_1Min['datetime']:
-        return
-    else:
+    df_kbar = pd.read_csv('data/kbar.csv')
+    df_1_kbar = None
+    df_5_kbar = None
+    df_15_kbar = None
+    df_30_kbar = None
+    if df_trade.empty == False:
+        if df_trade['type'].values[0] == 1:
+            try:
+                df_1_kbar = df_kbar[df_trade['minute'].values == 1].tail(1)
+            except ValueError:
+                df_1_kbar = None
+            try:
+                df_5_kbar = df_kbar[df_trade['minute'].values == 5].tail(1)
+            except ValueError:
+                df_5_kbar = None
+            try:
+                df_15_kbar = df_kbar[df_trade['minute'].values == 15].tail(1)
+            except ValueError:
+                df_15_kbar = None
+            try:
+                df_30_kbar = df_kbar[df_trade['minute'].values == 30].tail(1)
+            except ValueError:
+                df_30_kbar = None
+
+    if df_1_kbar is None or df_1_kbar.empty:
         if df_1Min['volume'] >= 1000:
-            get_power_data(1,tick_close,df_1Min)
-            globals.min1_notify_time = df_1Min['datetime']
-    
-    if globals.min5_notify_time == df_5Min['datetime']:
-        return
-    else:
+            get_power_data(1, tick_close, df_1Min)
+    elif df_1_kbar['datetime'].values[0] != df_1Min['datetime']:
+        if df_1Min['volume'] >= 1000:
+            get_power_data(1, tick_close, df_1Min)
+        
+    if df_5_kbar is None or df_5_kbar.empty:
         if df_5Min['volume'] >= 1000:
-            get_power_data(5,tick_close,df_5Min)
-            globals.min5_notify_time = df_5Min['datetime']
+            get_power_data(5, tick_close, df_5Min)
+    elif df_5_kbar['datetime'].values[0] != df_5Min['datetime']:
+        if df_5Min['volume'] >= 1000:
+            get_power_data(5, tick_close, df_5Min)
         
-    if globals.min15_notify_time == df_15Min['datetime']:
-        return
-    else:
+    if df_15_kbar is None or df_15_kbar.empty:
         if df_15Min['volume'] >= 1000:
-            get_power_data(15,tick_close,df_15Min)
-            globals.min15_notify_time = df_15Min['datetime']
-        
-    if globals.min30_notify_time == df_30Min['datetime']:
-        return
-    else:
+            get_power_data(15, tick_close, df_15Min)
+    elif df_15_kbar['datetime'].values[0] != df_15Min['datetime']:
+        if df_15Min['volume'] >= 1000:
+            get_power_data(15, tick_close, df_15Min)
+    if df_30_kbar is None or df_30_kbar.empty:
         if df_30Min['volume'] >= 1000:
-            get_power_data(30,tick_close,df_30Min)
-            globals.min30_notify_time = df_30Min['datetime']
+            get_power_data(30, tick_close, df_30Min)
+    elif df_30_kbar['datetime'].values[0] != df_30Min['datetime']:
+        if df_30Min['volume'] >= 1000:
+            get_power_data(30, tick_close, df_30Min)
 
 def get_power_data(minute,tick_close,df):
     volume = float(str(df['volume'])[0] + '.' + str(df['volume'])[1:]) if int(
         str(df['volume'])[0]) < 6 else float('0.' + str(df['volume']))
-
+    
     color = None
     datetime = df['datetime']
     power = math.ceil((df['high'] - df['low']) * volume)
@@ -78,31 +107,12 @@ def get_power_data(minute,tick_close,df):
     else:
         color = 'k：綠'
     
-    if minute == 1:
-        globals.min1_op_h = op_h
-        globals.min1_op_l = op_l
-        tmp_datetime = pd.to_datetime(datetime)
-        globals.min1_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    elif minute == 5:
-        globals.min5_op_h = op_h
-        globals.min5_op_l = op_l
-        tmp_datetime = pd.to_datetime(datetime)
-        globals.min5_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    elif minute == 15:
-        globals.min15_op_h = op_h
-        globals.min15_op_l = op_l
-        tmp_datetime = pd.to_datetime(datetime)
-        globals.min15_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    elif minute == 30:
-        globals.min30_op_h = op_h
-        globals.min30_op_l = op_l
-        tmp_datetime = pd.to_datetime(datetime)
-        globals.min30_maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    
-    # trade(tick_close)
-    lineMsgFormat(minute,datetime,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
+    tmp_datetime = pd.to_datetime(datetime)
+    maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
+    trade(tick_close,datetime)
+    lineMsgFormat(minute,datetime,maturity_time,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
 
-def trade(close):
+def trade(close,kbar_datetime):
     '''
     交易
     '''
@@ -110,218 +120,149 @@ def trade(close):
     loss = 11  # 損失幾點出場
     balance = 0  # 賺or賠 計算方式 => ((賣出部位-收盤部位)*50)-70手續費
     total_balance = df_trade['balance'].sum()  # 總賺賠
-    
+    has_order = False
     if not df_trade.empty:
         if df_trade.iloc[-1]['type'] == 1:
-            globals.has_order = True
-
-    if globals.has_order == False:# 目前沒單
-        now_min_str = globals.now_min + ":00"
-        now_min = pd.to_datetime(now_min_str, format="%Y/%m/%d %H:%M:%S")
-        if globals.min1_maturity_time != None:
-            min1_maturity_time = pd.to_datetime(globals.min1_maturity_time, format="%Y/%m/%d %H:%M:%S")
+            has_order = True
+            
+    df_kbar = pd.read_csv('data/kbar.csv')
+    df_1 = df_kbar[df_kbar['minute'] == 1].tail(1)
+    df_5 = df_kbar[df_kbar['minute'] == 5].tail(1)
+    df_15 = df_kbar[df_kbar['minute'] == 15].tail(1)
+    df_30 = df_kbar[df_kbar['minute'] == 30].tail(1)
+    min1_maturity_time = None
+    min5_maturity_time = None
+    min15_maturity_time = None
+    min30_maturity_time = None
+    
+    if df_1['maturity_time'].any():
+        min1_maturity_time = pd.to_datetime(df_1['maturity_time'], format="%H:%M").iloc[0].time()
+        min1_maturity_time = datetime.time(hour=min1_maturity_time.hour, minute=min1_maturity_time.minute, second=0)
+    if df_5['maturity_time'].any():
+        min5_maturity_time = pd.to_datetime(df_5['maturity_time'], format="%H:%M").iloc[0].time()
+        min5_maturity_time = datetime.time(hour=min5_maturity_time.hour, minute=min5_maturity_time.minute, second=0)
+    if df_15['maturity_time'].any():
+        min15_maturity_time = pd.to_datetime(df_15['maturity_time'], format="%H:%M").iloc[0].time()
+        min15_maturity_time = datetime.time(hour=min15_maturity_time.hour, minute=min15_maturity_time.minute, second=0)
+    if df_30['maturity_time'].any():
+        min30_maturity_time = pd.to_datetime(df_30['maturity_time'], format="%H:%M").iloc[0].time()
+        min30_maturity_time = datetime.time(hour=min30_maturity_time.hour, minute=min30_maturity_time.minute, second=0)
+    
+    now_min = datetime.datetime.now().replace(second=0, microsecond=0).time()
+    if has_order == False:# 目前沒單
+        if min1_maturity_time is not None:
             if now_min <= min1_maturity_time:
-                if close >= globals.min1_op_h:
+                if close >= df_1['op_h'].values[0]:
                     print('買進空單')
-                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                    globals.min_buy = 1
-                elif globals.min1_op_l <= close:
+                    buy_sell(1, -1, close, balance,total_balance,1,kbar_datetime)  # 買進空單
+                elif close <= df_1['op_l'].values[0]:
                     print('買進多單')
-                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                    globals.min_buy = 1
-        elif globals.min5_maturity_time != None:
-            min5_maturity_time = pd.to_datetime(globals.min5_maturity_time, format="%Y/%m/%d %H:%M:%S")
+                    buy_sell(1, 1, close, balance,total_balance,1,kbar_datetime)  # 買進多單
+        elif min5_maturity_time is not None:
             if now_min <= min5_maturity_time:
-                if close >= globals.min5_op_h:
+                if close >= df_5['op_h'].values[0]:
                     print('買進空單')
-                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                    globals.min_buy = 5
-                elif globals.min5_op_l <= close:
+                    buy_sell(1, -1, close, balance,total_balance,5,kbar_datetime)  # 買進空單
+                elif close <= df_5['op_l'].values[0]:
                     print('買進多單')
-                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                    globals.min_buy = 5
-        elif globals.min15_maturity_time != None:
-            min15_maturity_time = pd.to_datetime(globals.min15_maturity_time, format="%Y/%m/%d %H:%M:%S")
+                    buy_sell(1, 1, close, balance,total_balance,5,kbar_datetime)  # 買進多單
+        elif min15_maturity_time is not None:
             if now_min <= min15_maturity_time:
-                if close >= globals.min15_op_h:
-                    print('買進空單')
-                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                    globals.min_buy = 15
-                elif globals.min15_op_l <= close:
+                if close >= df_15['op_h'].values[0]:
+                    buy_sell(1, -1, close, balance,total_balance,15,kbar_datetime)  # 買進空單
+                elif close <= df_15['op_l'].values[0]:
                     print('買進多單')
-                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                    globals.min_buy = 15
-        elif globals.min30_maturity_time != None:
-            min30_maturity_time = pd.to_datetime(globals.min30_maturity_time, format="%Y/%m/%d %H:%M:%S")
+                    buy_sell(1, 1, close, balance,total_balance,15,kbar_datetime)  # 買進多單
+        elif min30_maturity_time is not None:
             if now_min <= min30_maturity_time:
-                if close >= globals.min30_op_h:
-                    print('買進空單')
-                    buy_sell(1, -1, close, balance,total_balance)  # 買進空單
-                    globals.min_buy = 30
-                elif globals.min30_op_l <= close:
+                if close >= df_30['op_h'].values[0]:
+                    buy_sell(1, -1, close, balance,total_balance,30,kbar_datetime)  # 買進空單
+                elif close <= df_30['op_l'].values[0]:
                     print('買進多單')
-                    buy_sell(1, 1, close, balance,total_balance)  # 買進多單
-                    globals.min_buy = 30
+                    buy_sell(1, 1, close, balance,total_balance,30,kbar_datetime)  # 買進多單
     else:# 目前有單 
         if len(df_trade) > 0:
+            close = int(close)
+            loss = int(loss)
+            price = int(df_trade['price'].iloc[-1])
             if df_trade['type'].iloc[-1] == 1:  # 有單時
                 if df_trade['lot'].iloc[-1]  == 1:  # 有多單的處理
                     #判斷是幾分k通知的單
-                    if globals.min_buy == 1:
-                        if close <= (df_trade['price'].iloc[-1]  - loss):
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70
+                    if df_trade['minute'].iloc[-1] == 1:
+                        if close <= (price  - loss):
+                            balance = ((close - price )*50)-70
                             print('多單停損')
-                            buy_sell(-1, -1, close, balance,total_balance)
-                            globals.min_buy = 0
-                            globals.min1_op_h = 0
-                            globals.min1_op_l = 0
-                            globals.min1_notify_time = None
-                            globals.min1_maturity_time = None
-                        elif close >= globals.min1_op_h:
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
+                            buy_sell(-1, -1, close, balance,total_balance,1,kbar_datetime)
+                        elif close >= df_1['op_h'].values[0]:
+                            balance = ((close - price )*50)-70  # 計算賺賠
                             print('多單停利')
-                            buy_sell(-1, -1,close, balance,total_balance)  # 多單停利
-                            globals.min_buy = 0
-                            globals.min1_op_h = 0
-                            globals.min1_op_l = 0
-                            globals.min1_notify_time = None
-                            globals.min1_maturity_time = None
-                    elif globals.min_buy == 5:
-                        if close <= (df_trade['price'].iloc[-1]  - loss):
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70
+                            buy_sell(-1, -1,close, balance,total_balance,1,kbar_datetime)  # 多單停利
+                    elif df_trade['minute'].iloc[-1] == 5:
+                        if close <= (price  - loss):
+                            balance = ((close - price )*50)-70
                             print('多單停損')
-                            buy_sell(-1, -1, close, balance,total_balance)
-                            globals.min_buy = 0
-                            globals.min5_op_h = 0
-                            globals.min5_op_l = 0
-                            globals.min5_notify_time = None
-                            globals.min5_maturity_time = None
-                        elif close >= globals.min5_op_h:
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
+                            buy_sell(-1, -1, close, balance,total_balance,5,kbar_datetime)
+                        elif close >= df_5['op_h'].values[0]:
+                            balance = ((close - price )*50)-70  # 計算賺賠
                             print('多單停利')
-                            buy_sell(-1, -1,close, balance,total_balance)  # 多單停利
-                            globals.min_buy = 0
-                            globals.min5_op_h = 0
-                            globals.min5_op_l = 0
-                            globals.min5_notify_time = None
-                            globals.min5_maturity_time = None
-                    elif globals.min_buy == 15:
-                        if close <= (df_trade['price'].iloc[-1]  - loss):
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70
+                            buy_sell(-1, -1,close, balance,total_balance,5,kbar_datetime)  # 多單停利
+                    elif df_trade['minute'].iloc[-1] == 15:
+                        if close <= (price  - loss):
+                            balance = ((close - price )*50)-70
                             print('多單停損')
-                            buy_sell(-1, -1, close, balance,total_balance)
-                            globals.min_buy = 0
-                            globals.min15_op_h = 0
-                            globals.min15_op_l = 0
-                            globals.min15_notify_time = None
-                            globals.min15_maturity_time = None
-                        elif close >= globals.min15_op_h:
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
+                            buy_sell(-1, -1, close, balance,total_balance,15,kbar_datetime)
+                        elif close >= df_15['op_h'].values[0]:
+                            balance = ((close - price )*50)-70  # 計算賺賠
                             print('多單停利')
-                            buy_sell(-1, -1,close, balance,total_balance)  # 多單停利
-                            globals.min_buy = 0
-                            globals.min15_op_h = 0
-                            globals.min15_op_l = 0
-                            globals.min15_notify_time = None
-                            globals.min15_maturity_time = None
-                    elif globals.min_buy == 30:
-                        if close <= (df_trade['price'].iloc[-1]  - loss):
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70
+                            buy_sell(-1, -1,close, balance,total_balance,15,kbar_datetime)  # 多單停利
+                    elif df_trade['minute'].iloc[-1] == 30:
+                        if close <= (price  - loss):
+                            balance = ((close - price )*50)-70
                             print('多單停損')
-                            buy_sell(-1, -1, close, balance,total_balance)
-                            globals.min_buy = 0
-                            globals.min30_op_h = 0
-                            globals.min30_op_l = 0
-                            globals.min30_notify_time = None
-                            globals.min30_maturity_time = None
-                        elif close >= globals.min30_op_h:
-                            balance = ((close - df_trade['price'].iloc[-1] )*50)-70  # 計算賺賠
+                            buy_sell(-1, -1, close, balance,total_balance,30,kbar_datetime)
+                        elif close >= df_30['op_h'].values[0]:
+                            balance = ((close - price )*50)-70  # 計算賺賠
                             print('多單停利')
-                            buy_sell(-1, -1,close, balance,total_balance)  # 多單停利
-                            globals.min_buy = 0
-                            globals.min30_op_h = 0
-                            globals.min30_op_l = 0
-                            globals.min30_notify_time = None
-                            globals.min30_maturity_time = None
+                            buy_sell(-1, -1,close, balance,total_balance,30,kbar_datetime)  # 多單停利
                 elif df_trade['lot'].iloc[-1]  == -1:  # 空單的處理
-                    if globals.min_buy == 1:
-                        if (close >= (df_trade['price'].iloc[-1] + loss)):
-                            balance = ((df_trade['price'].iloc[-1] - close)*50)-70  # 計算賺賠
+                    if df_trade['minute'].iloc[-1] == 1:
+                        if (close >= (price + loss)):
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單回補')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單回補
-                            globals.min_buy = 0
-                            globals.min1_op_h = 0
-                            globals.min1_op_l = 0
-                            globals.min1_notify_time = None
-                            globals.min1_maturity_time = None
-                        elif globals.min1_op_l <= close:
-                            balance = ((df_trade['price'].iloc[-1]  - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,1,kbar_datetime)  # 空單回補
+                        elif close <= df_1['op_l'].values[0]:
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單停利')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單停利
-                            globals.min_buy = 0
-                            globals.min1_op_h = 0
-                            globals.min1_op_l = 0
-                            globals.min1_notify_time = None
-                            globals.min1_maturity_time = None
-                    elif globals.min_buy == 5:
-                        if (close >= (df_trade['price'].iloc[-1] + loss)):
-                            balance = ((df_trade['price'].iloc[-1] - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,1,kbar_datetime)  # 空單停利
+                    elif df_trade['minute'].iloc[-1] == 5:
+                        if (close >= (price + loss)):
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單回補')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單回補
-                            globals.min_buy = 0
-                            globals.min5_op_h = 0
-                            globals.min5_op_l = 0
-                            globals.min5_notify_time = None
-                            globals.min5_maturity_time = None
-                        elif globals.min15_op_l <= close:
-                            balance = ((df_trade['price'].iloc[-1]  - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,5,kbar_datetime)  # 空單回補
+                        elif close <= df_5['op_l'].values[0]:
+                            balance = ((price  - close)*50)-70  # 計算賺賠
                             print('空單停利')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單停利
-                            globals.min_buy = 0
-                            globals.min5_op_h = 0
-                            globals.min5_op_l = 0
-                            globals.min5_notify_time = None
-                            globals.min5_maturity_time = None
-                    elif globals.min_buy == 15:
-                        if (close >= (df_trade['price'].iloc[-1] + loss)):
-                            balance = ((df_trade['price'].iloc[-1] - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,5,kbar_datetime)  # 空單停利
+                    elif df_trade['minute'].iloc[-1] == 15:
+                        if (close >= (price + loss)):
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單回補')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單回補
-                            globals.min_buy = 0
-                            globals.min15_op_h = 0
-                            globals.min15_op_l = 0
-                            globals.min15_notify_time = None
-                            globals.min15_maturity_time = None
-                        elif globals.min15_op_l <= close:
-                            balance = ((df_trade['price'].iloc[-1]  - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,15,kbar_datetime)  # 空單回補
+                        elif close <= df_15['op_l'].values[0]:
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單停利')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單停利
-                            globals.min_buy = 0
-                            globals.min15_op_h = 0
-                            globals.min15_op_l = 0
-                            globals.min15_notify_time = None
-                            globals.min15_maturity_time = None
-                    elif globals.min_buy == 30:
-                        if (close >= (df_trade['price'].iloc[-1] + loss)):
-                            balance = ((df_trade['price'].iloc[-1] - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,15,kbar_datetime)  # 空單停利
+                    elif df_trade['minute'].iloc[-1] == 30:
+                        if (close >= (price + loss)):
+                            balance = ((price - close)*50)-70  # 計算賺賠
                             print('空單回補')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單回補
-                            globals.min_buy = 0
-                            globals.min30_op_h = 0
-                            globals.min30_op_l = 0
-                            globals.min30_notify_time = None
-                            globals.min30_maturity_time = None
-                        elif globals.min30_op_l <= close:
-                            balance = ((df_trade['price'].iloc[-1]  - close)*50)-70  # 計算賺賠
+                            buy_sell(-1, 1, close, balance,total_balance,30,kbar_datetime)  # 空單回補
+                        elif close <= df_30['op_l'].values[0]:
+                            balance = ((price  - close)*50)-70  # 計算賺賠
                             print('空單停利')
-                            buy_sell(-1, 1, close, balance,total_balance)  # 空單停利
-                            globals.min_buy = 0
-                            globals.min30_op_h = 0
-                            globals.min30_op_l = 0
-                            globals.min30_notify_time = None
-                            globals.min30_maturity_time = None
+                            buy_sell(-1, 1, close, balance,total_balance,30,kbar_datetime)  # 空單停利
 
-def buy_sell(type,lot,close,balance,total_balance):
+def buy_sell(type,lot,close,balance,total_balance,minute,dt):
     '''
     買/回補 or 賣或放空
     type 1:進場 -1:出場
@@ -340,11 +281,10 @@ def buy_sell(type,lot,close,balance,total_balance):
         print('多單賣出')
         total_lot = 0
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     total_balance = total_balance + balance
     with open('data/trade.csv', 'a', encoding='utf-8', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([now, type, close, lot, total_lot, balance, total_balance,0])
+        writer.writerow([now, type, close, lot, total_lot, balance, total_balance,0,minute,dt])
         lineMsgFormat_trade(now, type, close, lot, total_lot, balance, total_balance)
     
 def lineMsgFormat_trade(datetime,type,price,lot,total_lot,balance,total_balance):
@@ -369,25 +309,13 @@ def lineMsgFormat_trade(datetime,type,price,lot,total_lot,balance,total_balance)
         
     sendMessage(msg)
 
-def lineMsgFormat(minute,datetime,color,close,volume,power,hh,h,l,ll,op_h,op_l,tick_close):
-    maturity_time = None
-    maturity_date = None
-    if minute == 1:
-        maturity_time = str(globals.min1_maturity_time)
-        maturity_date , maturity_time = maturity_time.split(" ")
-        maturity_time = maturity_time[:-3]
-    elif minute == 5:
-        maturity_time = str(globals.min5_maturity_time)
-        maturity_date , maturity_time = maturity_time.split(" ")
-        maturity_time = maturity_time[:-3]
-    elif minute == 15:
-        maturity_time = str(globals.min15_maturity_time)
-        maturity_date , maturity_time = maturity_time.split(" ")
-        maturity_time = maturity_time[:-3]
-    elif minute == 30:
-        maturity_time = str(globals.min30_maturity_time)
-        maturity_date , maturity_time = maturity_time.split(" ")
-        maturity_time = maturity_time[:-3]
+def lineMsgFormat(minute,datetime,maturity_time,color,close,volume,power,hh,h,l,ll,op_h,op_l,tick_close):
+    '''
+    能量k的line通知
+    '''
+    maturity_time = str(maturity_time)
+    maturity_date , maturity_time = maturity_time.split(" ")
+    maturity_time = maturity_time[:-3]
     date, time = datetime.split(" ")
     time = time[:-3]
     msg = "\n頻率："+str(minute)+'分鐘圖\n'
@@ -406,6 +334,11 @@ def lineMsgFormat(minute,datetime,color,close,volume,power,hh,h,l,ll,op_h,op_l,t
     msg += "反轉高點："+str(op_h)+"\n"
     msg += "反轉低點："+str(op_l)+"\n"
     msg += "現價："+str(tick_close)+"\n"
+    
+    with open('data/kbar.csv', 'a', encoding='utf-8', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([datetime, minute, maturity_time, op_h, op_l])
+        
     sendMessage(msg)
 
 def sendMessage(message):
@@ -459,7 +392,7 @@ def quote_callback(exchange:Exchange, tick:TickFOPv1):
         
     globals.now_min = ck.get_now_min()
     globals.tick_min = ck.get_tick_min()
-    trade(tick.close) #判斷交易
+    
     if globals.now_min == globals.tick_min: #現在的分鐘數與tick分鐘相符合就收集資料
         globals.volume += tick.volume
         if tick.close not in globals.amount: #排除重覆資料
@@ -473,7 +406,8 @@ def quote_callback(exchange:Exchange, tick:TickFOPv1):
         ck.convert_k_bar('15Min')
         ck.convert_k_bar('30Min')
         power_kbar(tick.close)
-
+        trade(tick.close) #判斷交易
+    
 threading.Event().wait()
 api.logout()
 
@@ -484,8 +418,7 @@ if current_time == datetime.time(hour=5, minute=00) or current_time == datetime.
     df_tick = pd.read_csv('data/tick.csv', index_col='datetime')
     for index, row in df_tick.iterrows():
         globals.amount.append(row['close'])
-        globals.volume += row['volume']
-                        
+        globals.volume += row['volume']      
         now = datetime.datetime.now()
         last_min  = now.strftime('%Y/%m/%d %H:%M')
         ck = convertK(row,True)
@@ -493,5 +426,3 @@ if current_time == datetime.time(hour=5, minute=00) or current_time == datetime.
         ck.convert_k_bar('5Min')
         ck.convert_k_bar('15Min')
         ck.convert_k_bar('30Min')
-        # ck.convert_k_bar('60Min')
-        # ck.convert_day_k_bar()
