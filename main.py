@@ -24,70 +24,29 @@ def power_kbar(tick_close):
     '''
      能量K棒計算
     '''
-    df_1 = pd.read_csv('data/1Min.csv')
-    df_1Min = df_1.iloc[-2]
+    df_1Min = pd.read_csv('data/1Min.csv').iloc[-2]
+    df_5Min = pd.read_csv('data/5Min.csv').iloc[-2]
+    df_15Min = pd.read_csv('data/15Min.csv').iloc[-2]
+    df_30Min = pd.read_csv('data/30Min.csv').iloc[-2]
 
-    df_5 = pd.read_csv('data/5Min.csv')
-    df_5Min = df_5.iloc[-2]
-
-    df_15 = pd.read_csv('data/15Min.csv')
-    df_15Min = df_15.iloc[-2]
-
-    df_30 = pd.read_csv('data/30Min.csv')
-    df_30Min = df_30.iloc[-2]
-
-    df_trade = pd.read_csv('data/trade.csv').tail(1)
+    now = datetime.datetime.now().replace(second=0, microsecond=0)
+    formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     
-    df_kbar = pd.read_csv('data/kbar.csv')
-    df_1_kbar = None
-    df_5_kbar = None
-    df_15_kbar = None
-    df_30_kbar = None
-    if df_trade.empty == False:
-        if df_trade['type'].values[0] == 1:
-            try:
-                df_1_kbar = df_kbar[df_trade['minute'].values == 1].tail(1)
-            except ValueError:
-                df_1_kbar = None
-            try:
-                df_5_kbar = df_kbar[df_trade['minute'].values == 5].tail(1)
-            except ValueError:
-                df_5_kbar = None
-            try:
-                df_15_kbar = df_kbar[df_trade['minute'].values == 15].tail(1)
-            except ValueError:
-                df_15_kbar = None
-            try:
-                df_30_kbar = df_kbar[df_trade['minute'].values == 30].tail(1)
-            except ValueError:
-                df_30_kbar = None
-
-    if df_1_kbar is None or df_1_kbar.empty:
+    if formatted_time > df_1Min['datetime']:
         if df_1Min['volume'] >= 1000:
             get_power_data(1, tick_close, df_1Min)
-    elif df_1_kbar['datetime'].values[0] != df_1Min['datetime']:
-        if df_1Min['volume'] >= 1000:
-            get_power_data(1, tick_close, df_1Min)
-        
-    if df_5_kbar is None or df_5_kbar.empty:
+    
+    if formatted_time > df_5Min['datetime']:
         if df_5Min['volume'] >= 1000:
-            get_power_data(5, tick_close, df_5Min)
-    elif df_5_kbar['datetime'].values[0] != df_5Min['datetime']:
-        if df_5Min['volume'] >= 1000:
-            get_power_data(5, tick_close, df_5Min)
-        
-    if df_15_kbar is None or df_15_kbar.empty:
+            get_power_data(1, tick_close, df_5Min)
+    
+    if formatted_time > df_15Min['datetime']:
         if df_15Min['volume'] >= 1000:
-            get_power_data(15, tick_close, df_15Min)
-    elif df_15_kbar['datetime'].values[0] != df_15Min['datetime']:
-        if df_15Min['volume'] >= 1000:
-            get_power_data(15, tick_close, df_15Min)
-    if df_30_kbar is None or df_30_kbar.empty:
+            get_power_data(1, tick_close, df_15Min)
+            
+    if formatted_time > df_30Min['datetime']:
         if df_30Min['volume'] >= 1000:
-            get_power_data(30, tick_close, df_30Min)
-    elif df_30_kbar['datetime'].values[0] != df_30Min['datetime']:
-        if df_30Min['volume'] >= 1000:
-            get_power_data(30, tick_close, df_30Min)
+            get_power_data(1, tick_close, df_30Min)
 
 def get_power_data(minute,tick_close,df):
     volume = float(str(df['volume'])[0] + '.' + str(df['volume'])[1:]) if int(
@@ -109,7 +68,7 @@ def get_power_data(minute,tick_close,df):
     
     tmp_datetime = pd.to_datetime(datetime)
     maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    trade(tick_close,datetime)
+    trade(int(tick_close),datetime)
     lineMsgFormat(minute,datetime,maturity_time,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
 
 def trade(close,kbar_datetime):
