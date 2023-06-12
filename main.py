@@ -38,15 +38,15 @@ def power_kbar(tick_close):
     
     if formatted_time > df_5Min['datetime']:
         if df_5Min['volume'] >= 1000:
-            get_power_data(1, tick_close, df_5Min)
+            get_power_data(5, tick_close, df_5Min)
     
     if formatted_time > df_15Min['datetime']:
         if df_15Min['volume'] >= 1000:
-            get_power_data(1, tick_close, df_15Min)
+            get_power_data(15, tick_close, df_15Min)
             
     if formatted_time > df_30Min['datetime']:
         if df_30Min['volume'] >= 1000:
-            get_power_data(1, tick_close, df_30Min)
+            get_power_data(30, tick_close, df_30Min)
 
 def get_power_data(minute,tick_close,df):
     volume = float(str(df['volume'])[0] + '.' + str(df['volume'])[1:]) if int(
