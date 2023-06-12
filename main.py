@@ -406,7 +406,6 @@ def quote_callback(exchange:Exchange, tick:TickFOPv1):
         ck.convert_k_bar('15Min')
         ck.convert_k_bar('30Min')
         power_kbar(tick.close)
-        trade(tick.close) #判斷交易
     
 threading.Event().wait()
 api.logout()
