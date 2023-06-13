@@ -79,7 +79,7 @@ def power_kbar(tick_close):
     else:
         df_15_kbar['datetime'] = df_15_kbar['datetime'].astype(str)
         if df_15_kbar['datetime'].values[0] != df_15Min['datetime']:
-            if df_15_kbar['volume'] >= 1000:
+            if df_15Min['volume'] >= 1000:
                 get_power_data(15, tick_close, df_15Min)
     
     if df_30_kbar is None or df_30_kbar.empty:
