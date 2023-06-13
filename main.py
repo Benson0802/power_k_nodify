@@ -61,7 +61,8 @@ def power_kbar(tick_close):
     else:
         df_1_kbar['datetime'] = df_1_kbar['datetime'].astype(str)
         if df_1_kbar['datetime'].values[0] != df_1Min['datetime']:
-            get_power_data(1, tick_close, df_1Min)
+            if df_1Min['volume'] >= 1000:
+                get_power_data(1, tick_close, df_1Min)
             
     if df_5_kbar is None or df_5_kbar.empty:
         if df_5Min['volume'] >= 1000:
@@ -69,7 +70,8 @@ def power_kbar(tick_close):
     else:
         df_5_kbar['datetime'] = df_5_kbar['datetime'].astype(str)
         if df_5_kbar['datetime'].values[0] != df_5Min['datetime']:
-            get_power_data(5, tick_close, df_5Min)
+            if df_5Min['volume'] >= 1000:
+                get_power_data(5, tick_close, df_5Min)
             
     if df_15_kbar is None or df_15_kbar.empty:
         if df_15Min['volume'] >= 1000:
@@ -77,7 +79,8 @@ def power_kbar(tick_close):
     else:
         df_15_kbar['datetime'] = df_15_kbar['datetime'].astype(str)
         if df_15_kbar['datetime'].values[0] != df_15Min['datetime']:
-            get_power_data(15, tick_close, df_15Min)
+            if df_15_kbar['volume'] >= 1000:
+                get_power_data(15, tick_close, df_15Min)
     
     if df_30_kbar is None or df_30_kbar.empty:
         if df_30Min['volume'] >= 1000:
@@ -85,7 +88,8 @@ def power_kbar(tick_close):
     else:
         df_30_kbar['datetime'] = df_30_kbar['datetime'].astype(str)
         if df_30_kbar['datetime'].values[0] != df_30Min['datetime']:
-            get_power_data(30, tick_close, df_30Min)
+            if df_30Min['volume'] >= 1000:
+                get_power_data(30, tick_close, df_30Min)
 
 def get_power_data(minute,tick_close,df):
     volume = float(str(df['volume'])[0] + '.' + str(df['volume'])[1:]) if int(
