@@ -28,24 +28,60 @@ def power_kbar(tick_close):
     df_5Min = pd.read_csv('data/5Min.csv').iloc[-2]
     df_15Min = pd.read_csv('data/15Min.csv').iloc[-2]
     df_30Min = pd.read_csv('data/30Min.csv').iloc[-2]
-
-    now = datetime.datetime.now().replace(second=0, microsecond=0)
-    formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     
-    if formatted_time > df_1Min['datetime']:
+    df_kbar = pd.read_csv('data/kbar.csv')
+    df_1_kbar = None
+    df_5_kbar = None
+    df_15_kbar = None
+    df_30_kbar = None
+    
+    try:
+        df_1_kbar = df_kbar[df_kbar['minute'].values == 1].tail(1)
+    except ValueError:
+        df_1_kbar = None
+    try:
+        df_5_kbar = df_kbar[df_kbar['minute'].values == 5].tail(1)
+    except ValueError:
+        df_5_kbar = None
+    try:
+        df_15_kbar = df_kbar[df_kbar['minute'].values == 15].tail(1)
+    except ValueError:
+        df_15_kbar = None
+    try:
+        df_30_kbar = df_kbar[df_kbar['minute'].values == 30].tail(1)
+    except ValueError:
+        df_30_kbar = None
+    
+    if df_1_kbar is None:
         if df_1Min['volume'] >= 1000:
             get_power_data(1, tick_close, df_1Min)
-    
-    if formatted_time > df_5Min['datetime']:
+    else:
+        df_1_kbar['datetime'] = df_1_kbar['datetime'].astype(str)
+        if df_1_kbar['datetime'].values[0] != df_1Min['datetime']:
+            get_power_data(1, tick_close, df_1Min)
+            
+    if df_5_kbar is None:
         if df_5Min['volume'] >= 1000:
             get_power_data(5, tick_close, df_5Min)
-    
-    if formatted_time > df_15Min['datetime']:
+    else:
+        df_5_kbar['datetime'] = df_5_kbar['datetime'].astype(str)
+        if df_5_kbar['datetime'].values[0] != df_5Min['datetime']:
+            get_power_data(5, tick_close, df_5Min)
+            
+    if df_15_kbar is None:
         if df_15Min['volume'] >= 1000:
             get_power_data(15, tick_close, df_15Min)
-            
-    if formatted_time > df_30Min['datetime']:
+    else:
+        df_15_kbar['datetime'] = df_15_kbar['datetime'].astype(str)
+        if df_15_kbar['datetime'].values[0] != df_15Min['datetime']:
+            get_power_data(15, tick_close, df_15Min)
+    
+    if df_30_kbar is None:
         if df_30Min['volume'] >= 1000:
+            get_power_data(30, tick_close, df_30Min)
+    else:
+        df_30_kbar['datetime'] = df_30_kbar['datetime'].astype(str)
+        if df_30_kbar['datetime'].values[0] != df_30Min['datetime']:
             get_power_data(30, tick_close, df_30Min)
 
 def get_power_data(minute,tick_close,df):
