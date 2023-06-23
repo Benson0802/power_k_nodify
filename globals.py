@@ -5,9 +5,11 @@ def initialize():
     global amount #這一分鐘收集的tick收盤價
     global code #台指期月份
     global line_token
+    global today
     now_min = None
     tick_min = None
     volume = 0
     amount = []
     code = ''
     line_token = []
+    today = None

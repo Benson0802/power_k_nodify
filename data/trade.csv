@@ -1,1 +1,32 @@
 datetime,type,price,lot,total_lot,balance,total_balance,real_total_balance,minute,kbar_datetime
+2023-06-21 01:04:59,1,17168,-1,1,0,0,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 02:00:08,-1,17158,1,0,430,430,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 02:08:06,1,17158,1,1,0,430,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 03:51:02,-1,17171,-1,0,580,1010,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 03:52:09,1,17168,-1,1,0,1010,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 03:56:14,-1,17156,1,0,530,1540,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 03:57:11,1,17156,1,1,0,1540,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 08:45:58,-1,17170,-1,0,630,2170,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 08:48:58,1,17170,-1,1,0,2170,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 08:52:58,-1,17184,1,0,-770,1400,0,5,2023-06-21 08:50:00
+2023-06-21 08:53:00,1,17184,-1,1,0,1400,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 09:20:59,-1,17148,1,0,1730,3130,0,5,2023-06-21 09:20:00
+2023-06-21 09:30:02,1,17161,-1,1,0,3130,0,5,2023-06-21 09:25:00
+2023-06-21 09:33:03,-1,17171,1,0,-570,2560,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 09:34:02,1,17170,-1,1,0,2560,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 09:41:02,-1,17150,1,0,930,3490,0,5,2023-06-21 09:40:00
+2023-06-21 09:51:02,1,17145,1,1,0,3490,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:11:02,-1,17158,-1,0,580,4070,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:12:02,1,17157,-1,1,0,4070,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:18:02,-1,17167,1,0,-570,3500,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:19:02,1,17166,-1,1,0,3500,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:27:01,-1,17176,1,0,-570,2930,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 10:28:02,1,17179,-1,1,0,2930,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 13:01:01,-1,17212,1,0,-1720,1210,0,5,2023-06-21 13:00:00
+2023-06-21 13:01:02,1,17212,-1,1,0,1210,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 13:04:01,-1,17229,1,0,-920,290,0,5,2023-06-21 13:00:00
+2023-06-21 13:04:02,1,17229,-1,1,0,290,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-21 13:08:02,-1,17242,1,0,-720,-430,0,5,2023-06-21 13:05:00
+2023-06-23 14:20:50,1,16850,1,1,0,-430,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-23 14:31:28,-1,16500,-1,0,-17570,-18000,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>
+2023-06-23 14:31:33,1,16500,1,1,0,-18000,0,5,<module 'datetime' from 'C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0\\lib\\datetime.py'>

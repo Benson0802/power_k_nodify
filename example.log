@@ -1,0 +1,46 @@
+INFO:root:5分k買進空單 close:17168 op_h:17168
+INFO:root:5分k空單停利 close:17158 op_l:17158
+INFO:root:5分k多單停利算錢 close:17158 price:17168 算出來的結果:-570
+INFO:root:5分k買進多單 close:17158 op_l:17158
+INFO:root:5分k多單停利 close:17171 op_h:17168
+INFO:root:5分k多單停利算錢 close:17171 price:17158 算出來的結果:580
+INFO:root:5分k買進空單 close:17168 op_h:17168
+INFO:root:5分k空單停利 close:17156 op_l:17158
+INFO:root:5分k多單停利算錢 close:17156 price:17168 算出來的結果:-670
+INFO:root:5分k買進多單 close:17156 op_l:17158
+INFO:root:5分k多單停利 close:17170 op_h:17168
+INFO:root:5分k多單停利算錢 close:17170 price:17156 算出來的結果:630
+INFO:root:5分k買進空單 close:17170 op_h:17168
+INFO:root:5分k空單回補 close:17184 price:17170 loss:10
+INFO:root:5分k空單回補算錢 close:17184 price:17170 算出來的結果:630
+INFO:root:5分k買進空單 close:17184 op_h:17176
+INFO:root:5分k空單停利 close:17148 op_l:17150
+INFO:root:5分k多單停利算錢 close:17148 price:17184 算出來的結果:-1870
+INFO:root:5分k買進空單 close:17161 op_h:17161
+INFO:root:5分k空單回補 close:17171 price:17161 loss:10
+INFO:root:5分k空單回補算錢 close:17171 price:17161 算出來的結果:430
+INFO:root:5分k買進空單 close:17170 op_h:17161
+INFO:root:5分k空單停利 close:17150 op_l:17150
+INFO:root:5分k多單停利算錢 close:17150 price:17170 算出來的結果:-1070
+INFO:root:5分k買進多單 close:17145 op_l:17149
+INFO:root:5分k多單停利 close:17158 op_h:17157
+INFO:root:5分k多單停利算錢 close:17158 price:17145 算出來的結果:580
+INFO:root:5分k買進空單 close:17157 op_h:17157
+INFO:root:5分k空單回補 close:17167 price:17157 loss:10
+INFO:root:5分k空單回補算錢 close:17167 price:17157 算出來的結果:430
+INFO:root:5分k買進空單 close:17166 op_h:17157
+INFO:root:5分k空單回補 close:17176 price:17166 loss:10
+INFO:root:5分k空單回補算錢 close:17176 price:17166 算出來的結果:430
+INFO:root:5分k買進空單 close:17179 op_h:17157
+INFO:root:5分k空單回補 close:17212 price:17179 loss:10
+INFO:root:5分k空單回補算錢 close:17212 price:17179 算出來的結果:1580
+INFO:root:5分k買進空單 close:17212 op_h:17201
+INFO:root:5分k空單回補 close:17229 price:17212 loss:10
+INFO:root:5分k空單回補算錢 close:17229 price:17212 算出來的結果:780
+INFO:root:5分k買進空單 close:17229 op_h:17201
+INFO:root:5分k空單回補 close:17242 price:17229 loss:10
+INFO:root:5分k空單回補算錢 close:17242 price:17229 算出來的結果:580
+INFO:root:5分k買進多單 close:16850 op_l:17222
+INFO:root:5分k多單停損 close:16500 price:16850 loss:10
+INFO:root:5分k多單停損算錢 close:16500 price:16850 算出來的結果:-17570
+INFO:root:5分k買進多單 close:16500 op_l:17222
