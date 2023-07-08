@@ -18,7 +18,6 @@ globals.initialize()
 obj = check_opening()
 year_mon = obj.get_year_mon()
 globals.code = 'TXF' + str(year_mon['year']) + ('0' if len(str(year_mon['mon'])) == 1 else '') + str(year_mon['mon'])
-globals.today = datetime.datetime.now().date().strftime('%Y-%m-%d')
 
 def power_kbar(tick_close):
     '''
@@ -26,7 +25,7 @@ def power_kbar(tick_close):
     '''
     print('能量k棒計算')
     # df_1Min = pd.read_csv('data/1Min.csv').iloc[-1]
-    df_5Min = pd.read_csv('data/5Min.csv').iloc[-2]
+    df_5Min = pd.read_csv('data/5Min.csv').iloc[-1]
     
     if df_5Min['volume'] >= 1000:
         get_power_data(5, tick_close, df_5Min)
@@ -99,10 +98,9 @@ def power_kbar(tick_close):
 def get_power_data(minute,tick_close,df):
     volume = float(str(df['volume'])[0] + '.' + str(df['volume'])[1:]) if int(
         str(df['volume'])[0]) < 6 else float('0.' + str(df['volume']))
-    
     color = None
     datetime = df['datetime']
-    power = math.ceil((df['high'] - df['low']) * volume)
+    power = math.floor((df['high'] - df['low']) * volume)
     hh = math.ceil(df['high'] + power)
     h = math.ceil(df['close'] + power)
     l = math.ceil(df['close'] - power)
@@ -114,10 +112,13 @@ def get_power_data(minute,tick_close,df):
     else:
         color = 'k：綠'
     
+    df_kbar = pd.read_csv('data/kbar.csv')
+    df_5kbar = df_kbar.tail(1)
     tmp_datetime = pd.to_datetime(datetime)
-    maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
-    trade(int(tick_close),datetime,minute)
-    lineMsgFormat(minute,datetime,maturity_time,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
+    if str(tmp_datetime) != df_5kbar['datetime'].values[0]:
+        maturity_time = tmp_datetime + pd.Timedelta(minutes=power)
+        trade(int(tick_close),datetime,minute)
+        lineMsgFormat(minute,datetime,maturity_time,color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
 
 def trade(close,kbar_datetime,minute):
     '''
@@ -159,7 +160,7 @@ def trade(close,kbar_datetime,minute):
         
     # now_min = datetime.datetime.now().replace(second=0, microsecond=0).time()
     
-    if has_order == False:# 目前沒單
+    if has_order == False and minute != 0:# 目前沒單
         # if min1_maturity_time is not None:
         #     if now_min <= min1_maturity_time:
         #         if close >= df_1['op_h'].values[0]:
@@ -434,23 +435,29 @@ with open('API_KEY.json', 'r') as f:
     
     while (True):
         #改抓kbar
-        kbars = api.kbars(
-            contract=api.Contracts.Futures.TXF.TXFR1,
-            start=globals.today,
-            end=globals.today,
-        )
-        
-        ck = convertK(kbars)
-        ck.write_history_1k_bar()
-        ck.convert_k_bar('5Min')
-        ck.convert_k_bar('15Min')
-        ck.convert_k_bar('30Min')
-        # ck.convert_k_bar('60Min')
-        ck.convert_day_k_bar()
-        last_close = ck.get_last_close()
-        if last_close is not None:
-            power_kbar(last_close)
-        time.sleep(10)
+        current_time = datetime.datetime.now()
+        start_time = current_time.replace(hour=8, minute=45)
+        end_time = current_time.replace(hour=13, minute=45)
+        next_day_time = current_time.replace(hour=5, minute=0) + datetime.timedelta(days=1)
+        if start_time <= current_time <= end_time or current_time >= current_time.replace(hour=15, minute=0) or current_time <= next_day_time:
+            globals.today = datetime.datetime.now().date().strftime('%Y-%m-%d')
+            kbars = api.kbars(
+                contract=api.Contracts.Futures.TXF.TXFR1,
+                start=globals.today,
+                end=globals.today,
+            )
+            
+            ck = convertK(kbars)
+            ck.write_history_1k_bar()
+            ck.convert_k_bar('5Min')
+            ck.convert_k_bar('15Min')
+            ck.convert_k_bar('30Min')
+            # ck.convert_k_bar('60Min')
+            ck.convert_day_k_bar()
+            last_close = ck.get_last_close()
+            if last_close is not None:
+                power_kbar(last_close)
+            time.sleep(10)
     
 # #開盤時間抓tick
 # api.quote.subscribe(

@@ -50,3 +50,158 @@ INFO:root:5分k買進空單 close:16893 op_h:16892
 INFO:root:5分k空單回補 close:16904 price:16893 loss:10
 INFO:root:5分k空單回補算錢 close:16904 price:16893 算出來的結果:480
 INFO:root:5分k買進空單 close:16903 op_h:16892
+INFO:root:5分k買進空單 close:16916 op_h:16892
+INFO:root:5分k空單回補 close:16927 price:16916 loss:10
+INFO:root:5分k空單回補算錢 close:16927 price:16916 算出來的結果:480
+INFO:root:5分k買進空單 close:16928 op_h:16892
+INFO:root:5分k空單回補 close:16940 price:16928 loss:10
+INFO:root:5分k空單回補算錢 close:16940 price:16928 算出來的結果:530
+INFO:root:5分k買進空單 close:16940 op_h:16938
+INFO:root:5分k空單回補 close:16951 price:16940 loss:10
+INFO:root:5分k空單回補算錢 close:16951 price:16940 算出來的結果:480
+INFO:root:5分k買進多單 close:17012 op_l:17012
+INFO:root:5分k多單停損 close:17001 price:17012 loss:10
+INFO:root:5分k多單停損算錢 close:17001 price:17012 算出來的結果:-620
+INFO:root:5分k買進多單 close:17001 op_l:17012
+INFO:root:5分k多單停損 close:16991 price:17001 loss:10
+INFO:root:5分k多單停損算錢 close:16991 price:17001 算出來的結果:-570
+INFO:root:5分k買進多單 close:16991 op_l:16991
+INFO:root:5分k多單停利 close:17003 op_h:17001
+INFO:root:5分k多單停利算錢 close:17003 price:16991 算出來的結果:530
+INFO:root:5分k買進空單 close:17004 op_h:17001
+INFO:root:5分k空單回補 close:17015 price:17004 loss:10
+INFO:root:5分k空單回補算錢 close:17015 price:17004 算出來的結果:480
+INFO:root:5分k買進空單 close:17015 op_h:17011
+INFO:root:5分k空單停利 close:17002 op_l:17003
+INFO:root:5分k多單停利算錢 close:17002 price:17015 算出來的結果:-720
+INFO:root:5分k買進多單 close:17002 op_l:17007
+INFO:root:5分k多單停利 close:17024 op_h:17023
+INFO:root:5分k多單停利算錢 close:17024 price:17002 算出來的結果:1030
+INFO:root:5分k買進空單 close:17026 op_h:17023
+INFO:root:5分k空單停利 close:17019 op_l:17019
+INFO:root:5分k多單停利算錢 close:17019 price:17026 算出來的結果:-420
+INFO:root:5分k買進多單 close:17019 op_l:17019
+INFO:root:5分k多單停損 close:17009 price:17019 loss:10
+INFO:root:5分k多單停損算錢 close:17009 price:17019 算出來的結果:-570
+INFO:root:5分k買進多單 close:17007 op_l:17019
+INFO:root:5分k多單停利 close:17035 op_h:17030
+INFO:root:5分k多單停利算錢 close:17035 price:17007 算出來的結果:1330
+INFO:root:5分k買進空單 close:17035 op_h:17030
+INFO:root:5分k空單回補 close:17045 price:17035 loss:10
+INFO:root:5分k空單回補算錢 close:17045 price:17035 算出來的結果:430
+INFO:root:5分k買進空單 close:17045 op_h:17030
+INFO:root:5分k空單回補 close:17056 price:17045 loss:10
+INFO:root:5分k空單回補算錢 close:17056 price:17045 算出來的結果:480
+INFO:root:5分k買進空單 close:17065 op_h:17064
+INFO:root:5分k空單回補 close:17075 price:17065 loss:10
+INFO:root:5分k空單回補算錢 close:17075 price:17065 算出來的結果:430
+INFO:root:5分k買進空單 close:17075 op_h:17064
+INFO:root:5分k空單停利 close:17059 op_l:17059
+INFO:root:5分k多單停利算錢 close:17059 price:17075 算出來的結果:-870
+INFO:root:5分k買進多單 close:17059 op_l:17059
+INFO:root:5分k多單停損 close:17046 price:17059 loss:10
+INFO:root:5分k多單停損算錢 close:17046 price:17059 算出來的結果:-720
+INFO:root:5分k買進多單 close:17048 op_l:17059
+INFO:root:5分k多單停損 close:17037 price:17048 loss:10
+INFO:root:5分k多單停損算錢 close:17037 price:17048 算出來的結果:-620
+INFO:root:5分k買進多單 close:17035 op_l:17059
+INFO:root:5分k多單停損 close:17023 price:17035 loss:10
+INFO:root:5分k多單停損算錢 close:17023 price:17035 算出來的結果:-670
+INFO:root:5分k買進多單 close:17023 op_l:17059
+INFO:root:5分k多單停損 close:17013 price:17023 loss:10
+INFO:root:5分k多單停損算錢 close:17013 price:17023 算出來的結果:-570
+INFO:root:5分k買進多單 close:17011 op_l:17059
+INFO:root:5分k多單停損 close:16998 price:17011 loss:10
+INFO:root:5分k多單停損算錢 close:16998 price:17011 算出來的結果:-720
+INFO:root:5分k買進多單 close:17011 op_l:17059
+INFO:root:5分k多單停損 close:17001 price:17011 loss:10
+INFO:root:5分k多單停損算錢 close:17001 price:17011 算出來的結果:-570
+INFO:root:5分k買進空單 close:17021 op_h:17020
+INFO:root:5分k買進空單 close:17023 op_h:17022
+INFO:root:5分k買進空單 close:17023 op_h:17022
+INFO:root:5分k買進多單 close:17001 op_l:17019
+INFO:root:5分k多單停損 close:16989 price:17001 loss:10
+INFO:root:5分k多單停損算錢 close:16989 price:17001 算出來的結果:-670
+INFO:root:5分k買進空單 close:17061 op_h:17044
+INFO:root:5分k空單回補 close:17071 price:17061 loss:10
+INFO:root:5分k空單回補算錢 close:17071 price:17061 算出來的結果:430
+INFO:root:5分k買進多單 close:17044 op_l:17051
+INFO:root:5分k多單停利 close:17054 op_h:17054
+INFO:root:5分k多單停利算錢 close:17054 price:17044 算出來的結果:430
+INFO:root:5分k買進空單 close:17061 op_h:17054
+INFO:root:5分k空單回補 close:17071 price:17061 loss:10
+INFO:root:5分k空單回補算錢 close:17071 price:17061 算出來的結果:430
+INFO:root:5分k買進空單 close:17099 op_h:17084
+INFO:root:5分k空單回補 close:17109 price:17099 loss:10
+INFO:root:5分k空單回補算錢 close:17109 price:17099 算出來的結果:430
+INFO:root:5分k買進空單 close:17096 op_h:17095
+INFO:root:5分k空單停利 close:17096 op_l:17096
+INFO:root:5分k多單停利算錢 close:17096 price:17096 算出來的結果:-70
+INFO:root:5分k買進空單 close:17106 op_h:17105
+INFO:root:5分k空單回補 close:17116 price:17106 loss:10
+INFO:root:5分k空單回補算錢 close:17116 price:17106 算出來的結果:430
+ERROR:shioaji:{'status': {'status_code': 401}, 'response': {'detail': 'Token is expired'}}
+INFO:root:5分k買進多單 close:16841 op_l:17035
+INFO:root:5分k多單停損 close:16830 price:16841 loss:10
+INFO:root:5分k多單停損算錢 close:16830 price:16841 算出來的結果:-620
+INFO:root:5分k買進多單 close:16835 op_l:16879
+INFO:root:5分k多單停損 close:16821 price:16835 loss:10
+INFO:root:5分k多單停損算錢 close:16821 price:16835 算出來的結果:-770
+INFO:root:5分k買進多單 close:16724 op_l:16741
+INFO:root:5分k多單停損 close:16714 price:16724 loss:10
+INFO:root:5分k多單停損算錢 close:16714 price:16724 算出來的結果:-570
+INFO:root:5分k買進多單 close:16717 op_l:16728
+INFO:root:5分k多單停損 close:16707 price:16717 loss:10
+INFO:root:5分k多單停損算錢 close:16707 price:16717 算出來的結果:-570
+INFO:root:5分k買進多單 close:16684 op_l:16702
+INFO:root:5分k多單停利 close:16718 op_h:16718
+INFO:root:5分k多單停利算錢 close:16718 price:16684 算出來的結果:1630
+INFO:root:5分k買進空單 close:16718 op_h:16718
+INFO:root:5分k空單停利 close:16712 op_l:16712
+INFO:root:5分k多單停利算錢 close:16712 price:16718 算出來的結果:-370
+INFO:root:5分k買進空單 close:16725 op_h:16725
+INFO:root:5分k空單停利 close:16714 op_l:16714
+INFO:root:5分k多單停利算錢 close:16714 price:16725 算出來的結果:-620
+INFO:root:5分k買進多單 close:16701 op_l:16707
+INFO:root:5分k多單停損 close:16688 price:16701 loss:10
+INFO:root:5分k多單停損算錢 close:16688 price:16701 算出來的結果:-720
+INFO:root:5分k買進多單 close:16633 op_l:16680
+INFO:root:5分k多單停損 close:16623 price:16633 loss:10
+INFO:root:5分k多單停損算錢 close:16623 price:16633 算出來的結果:-570
+INFO:root:5分k買進多單 close:16612 op_l:16615
+INFO:root:5分k多單停損 close:16601 price:16612 loss:10
+INFO:root:5分k多單停損算錢 close:16601 price:16612 算出來的結果:-620
+ERROR:shioaji:{'status': {'status_code': 401}, 'response': {'detail': 'Token is expired'}}
+INFO:root:5分k買進多單 close:16586 op_l:16609
+INFO:root:5分k多單停利 close:16598 op_h:16597
+INFO:root:5分k多單停利算錢 close:16598 price:16586 算出來的結果:530
+INFO:root:5分k買進空單 close:16601 op_h:16597
+INFO:root:5分k空單回補 close:16615 price:16601 loss:10
+INFO:root:5分k空單回補算錢 close:16615 price:16601 算出來的結果:630
+INFO:root:5分k買進空單 close:16580 op_h:16563
+INFO:root:5分k空單回補 close:16594 price:16580 loss:10
+INFO:root:5分k空單回補算錢 close:16594 price:16580 算出來的結果:630
+INFO:root:5分k買進空單 close:16627 op_h:16625
+INFO:root:5分k空單回補 close:16639 price:16627 loss:10
+INFO:root:5分k空單回補算錢 close:16639 price:16627 算出來的結果:530
+INFO:root:5分k買進空單 close:16647 op_h:16637
+INFO:root:5分k空單回補 close:16659 price:16647 loss:10
+INFO:root:5分k空單回補算錢 close:16659 price:16647 算出來的結果:530
+INFO:root:5分k買進多單 close:16668 op_l:16670
+INFO:root:5分k多單停損 close:16657 price:16668 loss:10
+INFO:root:5分k多單停損算錢 close:16657 price:16668 算出來的結果:-620
+INFO:root:5分k買進多單 close:16641 op_l:16655
+INFO:root:5分k多單停損 close:16631 price:16641 loss:10
+INFO:root:5分k多單停損算錢 close:16631 price:16641 算出來的結果:-570
+INFO:root:5分k買進多單 close:16632 op_l:16635
+INFO:root:5分k多單停利 close:16643 op_h:16643
+INFO:root:5分k多單停利算錢 close:16643 price:16632 算出來的結果:480
+INFO:root:5分k買進空單 close:16647 op_h:16643
+INFO:root:5分k空單停利 close:16632 op_l:16632
+INFO:root:5分k多單停利算錢 close:16632 price:16647 算出來的結果:-820
+INFO:root:5分k買進多單 close:16623 op_l:16632
+INFO:root:5分k多單停損 close:16613 price:16623 loss:10
+INFO:root:5分k多單停損算錢 close:16613 price:16623 算出來的結果:-570
+INFO:root:5分k買進空單 close:16744 op_h:16633
+INFO:root:5分k空單回補 close:16754 price:16744 loss:10
+INFO:root:5分k空單回補算錢 close:16754 price:16744 算出來的結果:430
