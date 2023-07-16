@@ -6,6 +6,7 @@ def initialize():
     global code #台指期月份
     global line_token
     global today
+    global day_color
     now_min = None
     tick_min = None
     volume = 0
@@ -13,3 +14,4 @@ def initialize():
     code = ''
     line_token = []
     today = None
+    day_color = None
