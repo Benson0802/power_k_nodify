@@ -27,8 +27,42 @@ def power_kbar(tick_close):
     df_5Min = pd.read_csv('data/5Min.csv').iloc[-1]
     df_15Min = pd.read_csv('data/15Min.csv').iloc[-1]
     df_30Min = pd.read_csv('data/30Min.csv').iloc[-1]
-    df_d = pd.read_csv('data/1Day.csv').iloc[-1]
-    get_power_data(1440, tick_close, df_d)
+    
+    df_d = None
+    df_1k = pd.read_csv('data/1Min.csv',index_col='datetime')
+    df_1k.index = pd.to_datetime(df_1k.index, format="%Y-%m-%d %H:%M:%S", errors='coerce')    
+    current_time = datetime.datetime.now()
+    d_start_time = current_time.replace(hour=8, minute=45, second=0, microsecond=0)
+    d_end_time = current_time.replace(hour=13, minute=45, second=0, microsecond=0)
+    n_start_time = current_time.replace(hour=15, minute=0, second=0, microsecond=0)
+    n_end_time = (current_time + datetime.timedelta(days=1)).replace(hour=5, minute=0, second=0, microsecond=0)
+    if d_start_time < current_time < d_end_time:
+        df_between_time_morning = df_1k.between_time('15:01', '23:59', inclusive='left')
+        df_between_time_night = df_1k.between_time('00:00', '05:00', inclusive='left')
+        df_combined = pd.concat([df_between_time_morning, df_between_time_night])
+        df_d = df_combined.resample('D').apply({
+            'open': 'first',
+            'high': 'max',
+            'low': 'min',
+            'close': 'last',
+            'volume': 'sum'
+        }).dropna()
+        if df_d.iloc[-1]['close'] > df_d.iloc[-1]['open']:
+            print("日k紅")
+            globals.day_color = "r"
+        else:
+            print("日k綠")
+            globals.day_color = "g"
+    elif n_start_time < current_time < n_end_time:
+        df_d = df_1k.between_time('08:46', '13:45').resample('D').last().dropna()
+        if df_d.iloc[-1]['close'] > df_d.iloc[-1]['open']:
+            print("日k紅")
+            globals.day_color = "r"
+        else:
+            print("日k綠")
+            globals.day_color = "g"
+    else:
+        print("現在時間不在任何時間範圍內。")
     
     # if df_1Min['volume'] >= 1000:
     #     get_power_data(1, tick_close, df_1Min)
@@ -119,15 +153,14 @@ def get_power_data(minute,tick_close,df):
     op_l = math.ceil(df['high'] - power)
     if df['close'] >= df['open']:
         color = 'K：紅'
-        if minute == 1440:
-            globals.day_color = "r"
     else:
         color = 'k：綠'
-        if minute == 1440:
-            globals.day_color = "g"
     
-    if minute != 1440:
-        df_kbar = pd.read_csv('data/kbar.csv')
+    df_kbar = pd.read_csv('data/kbar.csv')
+    if df_kbar.empty:
+        trade(int(tick_close),datetime,minute)
+        lineMsgFormat(minute,datetime,'',color,df['close'],df['volume'],power,hh,h,l,ll,op_h,op_l,tick_close)
+    else:
         df_5kbar = df_kbar.tail(1)
         tmp_datetime = pd.to_datetime(datetime)
         if str(tmp_datetime) != df_5kbar['datetime'].values[0]:
@@ -218,11 +251,11 @@ def trade(close,kbar_datetime,minute):
         
         # 依日k紅棒做低點
         if not df_5.empty:
-            if globals.code == "r":
-              if close <= df_5['l'].values[0]:
-                logging.info("5分k買進多單 close:"+str(close)+" l:"+str(df_5[';'].values[0]))
-                print('買進多單')
-                buy_sell(1, 1, close, balance,total_balance,5,kbar_datetime)  # 買進多單
+            if globals.day_color == "r":
+                if close <= df_5['l'].values[0]:
+                    logging.info("5分k買進多單 close:"+str(close)+" l:"+str(df_5['l'].values[0]))
+                    print('買進多單')
+                    buy_sell(1, 1, close, balance,total_balance,5,kbar_datetime)  # 買進多單
         # if not df_5.empty:
         #     if close >= df_5['op_h'].values[0]:
         #         logging.info("5分k買進空單 close:"+str(close)+" op_h:"+str(df_5['op_h'].values[0]))
@@ -414,9 +447,10 @@ def lineMsgFormat(minute,datetime,maturity_time,color,close,volume,power,hh,h,l,
     '''
     能量k的line通知
     '''
-    maturity_time = str(maturity_time)
-    maturity_date , maturity_time = maturity_time.split(" ")
-    maturity_time = maturity_time[:-3]
+    if maturity_time != '':
+        maturity_time = str(maturity_time)
+        maturity_date , maturity_time = maturity_time.split(" ")
+        maturity_time = maturity_time[:-3]
     date, time = datetime.split(" ")
     time = time[:-3]
     day_color = ""
@@ -529,7 +563,6 @@ with open('API_KEY.json', 'r') as f:
             
         globals.now_min = ck.get_now_min()
         globals.tick_min = ck.get_tick_min()
-        
         if globals.now_min == globals.tick_min: #現在的分鐘數與tick分鐘相符合就收集資料
             globals.volume += tick.volume
             if tick.close not in globals.amount: #排除重覆資料
@@ -542,6 +575,7 @@ with open('API_KEY.json', 'r') as f:
             ck.convert_k_bar('5Min')
             ck.convert_k_bar('15Min')
             ck.convert_k_bar('30Min')
+            print(tick.close)
             power_kbar(tick.close)
         
     threading.Event().wait()
