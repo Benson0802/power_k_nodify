@@ -54,7 +54,13 @@ def power_kbar(tick_close):
             print("日k綠")
             globals.day_color = "g"
     elif n_start_time < current_time < n_end_time:
-        df_d = df_1k.between_time('08:46', '13:45').resample('D').last().dropna()
+        df_d = df_1k.between_time('08:46', '13:45').resample('D').apply({
+            'open': 'first',
+            'high': 'max',
+            'low': 'min',
+            'close': 'last',
+            'volume': 'sum'
+        }).dropna()
         if df_d.iloc[-1]['close'] > df_d.iloc[-1]['open']:
             print("日k紅")
             globals.day_color = "r"
@@ -64,10 +70,10 @@ def power_kbar(tick_close):
     else:
         print("現在時間不在任何時間範圍內。")
     
-    # if df_1Min['volume'] >= 1000:
-    #     get_power_data(1, tick_close, df_1Min)
-    if df_5Min['volume'] >= 1000:
-        get_power_data(5, tick_close, df_5Min)
+    if df_1Min['volume'] >= 1000:
+        get_power_data(1, tick_close, df_1Min)
+    # if df_5Min['volume'] >= 1000:
+    #     get_power_data(5, tick_close, df_5Min)
     # elif df_15Min['volume'] >= 1000:
     #     get_power_data(15, tick_close, df_15Min)
     # elif df_30Min['volume'] >= 1000:
@@ -251,11 +257,17 @@ def trade(close,kbar_datetime,minute):
         
         # 依日k紅棒做低點
         if not df_5.empty:
+            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if globals.day_color == "r":
                 if close <= df_5['l'].values[0]:
-                    logging.info("5分k買進多單 close:"+str(close)+" l:"+str(df_5['l'].values[0]))
+                    logging.info("現在時間:"+now+" 參考的5分k時間"+df_5['datetime']+" 5分k買進多單 現價:"+str(close)+" 低:"+str(df_5['l'].values[0]))
                     print('買進多單')
                     buy_sell(1, 1, close, balance,total_balance,5,kbar_datetime)  # 買進多單
+            elif globals.day_color == "g":
+                if close >= df_5['h'].values[0]:
+                    logging.info("現在時間:"+now+" 參考的5分k時間"+df_5['datetime']+" 5分k買進空單 現價:"+str(close)+" 高:"+str(df_5['h'].values[0]))
+                    print('買進空單')
+                    buy_sell(1, -1, close, balance,total_balance,5,kbar_datetime)  # 買進空單
         # if not df_5.empty:
         #     if close >= df_5['op_h'].values[0]:
         #         logging.info("5分k買進空單 close:"+str(close)+" op_h:"+str(df_5['op_h'].values[0]))
@@ -291,11 +303,14 @@ def trade(close,kbar_datetime,minute):
                     
                     #依日k紅棒及5分k的能+低的判斷出場
                     if df_trade['minute'].iloc[-1] == 5:
+                        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         if close >= (df_5['l'].values[0] + df_5['power'].values[0]):
+                            logging.info("現在時間:"+now+" 參考的5分k時間"+df_5['datetime']+" 多單停利 現價:"+str(close)+" 滿足點:"+str(df_5['l'].values[0] + df_5['power'].values[0]))
                             balance = ((close - price )*50)-70  # 計算賺賠
                             print('多單停利')
                             buy_sell(-1, -1,close, balance,total_balance,5,kbar_datetime)  # 多單停利
                         if close <= (df_5['l'].values[0] - 10):
+                            logging.info("現在時間:"+now+" 參考的5分k時間"+df_5['datetime']+" 多單停損 現價:"+str(close)+" 停損點:"+str(close - price))
                             balance = ((close - price )*50)-70
                             print('多單停損')
                             buy_sell(-1, -1, close, balance,total_balance,5,kbar_datetime)
@@ -339,7 +354,19 @@ def trade(close,kbar_datetime,minute):
                     #         balance = ((close - price )*50)-70  # 計算賺賠
                     #         print('多單停利')
                     #         buy_sell(-1, -1,close, balance,total_balance,30,kbar_datetime)  # 多單停利
-                # elif df_trade['lot'].iloc[-1]  == -1:  # 空單的處理
+                elif df_trade['lot'].iloc[-1]  == -1:  # 空單的處理
+                    if df_trade['minute'].iloc[-1] == 5:
+                        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        if close >= (price + loss):
+                            logging.info("現在時間:"+now+" 參考的5分k時間"+str(df_5['datetime'])+" 空單停利 現價:"+str(close)+" 滿足點:"+str(price + loss))
+                            balance = ((close - price )*50)-70  # 計算賺賠
+                            print('空單停利')
+                            buy_sell(-1, 1, close, balance,total_balance,1,kbar_datetime)  # 空單回補
+                        if close <= (df_5['h'].values[0] - 10):
+                            logging.info("現在時間:"+now+" 參考的5分k時間"+str(df_5['datetime'])+" 空單停損 現價:"+str(close)+" 停損點:"+str(df_5['h'].values[0] - 10))
+                            balance = ((close - price )*50)-70
+                            print('空單停損')
+                            buy_sell(-1, -1, close, balance,total_balance,5,kbar_datetime)
                     # if df_trade['minute'].iloc[-1] == 1:
                     #     if (close >= (price + loss)):
                     #         logging.info("1分k空單回補 close:"+str(close)+" price:"+str(price)+" loss:"+str(loss))
